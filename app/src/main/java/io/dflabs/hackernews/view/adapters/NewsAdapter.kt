@@ -11,10 +11,11 @@ import com.bumptech.glide.Glide
 import io.dflabs.hackernews.R
 import io.dflabs.hackernews.model.objects.NewsObject
 
-class NewsAdapter(var news: ArrayList<NewsObject> = arrayListOf()) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
+class NewsAdapter(var news: ArrayList<NewsObject> = arrayListOf(),
+                  val clickListener: View.OnClickListener) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_new, parent, false)
-        return NewsViewHolder(view)
+        return NewsViewHolder(view, clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -30,6 +31,7 @@ class NewsAdapter(var news: ArrayList<NewsObject> = arrayListOf()) : RecyclerVie
                     .load(it)
                     .into(newsViewHolder.imageView)
         }
+        newsViewHolder.itemView.tag = newsObject
     }
 
     fun update(news: ArrayList<NewsObject>) {
@@ -37,9 +39,13 @@ class NewsAdapter(var news: ArrayList<NewsObject> = arrayListOf()) : RecyclerVie
         notifyDataSetChanged()
     }
 
-    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NewsViewHolder(itemView: View, clickListener: View.OnClickListener) : RecyclerView.ViewHolder(itemView) {
         var titleTextView: TextView = itemView.findViewById(R.id.itemNewTitle)
         var descriptionTextView: TextView = itemView.findViewById(R.id.itemNewDescription)
         var imageView: ImageView = itemView.findViewById(R.id.itemNewImageView)
+
+        init {
+            itemView.setOnClickListener(clickListener)
+        }
     }
 }
